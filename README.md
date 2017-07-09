@@ -8,21 +8,20 @@ The main idea is to perform pointer aliasing analysis only for pointers of a cer
 
 Consider the following method:
 
- 1:    public void method(Iterator<String> it1, Iterator<String> it2){
- 
- 2:        Iterator<String> it3;
- 3:        if(!it1.hasNext()){
- 4:            it3 = it1;
- 5:            System.out.println("Not using second iterator");
- 6:        }
- 7:        else{
- 8:            it3 = it2;
- 9:            System.out.println("First iterator is empty");
-10:        }
-11:        while(it3.hasNext()){
-12:            System.out.println(it3.next());
-13:        }
-14:    }
+``` 1:    public void method(Iterator<String> it1, Iterator<String> it2){
+``` 2:        Iterator<String> it3;
+``` 3:        if(!it1.hasNext()){
+``` 4:            it3 = it1;
+``` 5:            System.out.println("Not using second iterator");
+``` 6:        }
+``` 7:        else{
+``` 8:            it3 = it2;
+``` 9:            System.out.println("First iterator is empty");
+```10:        }
+```11:        while(it3.hasNext()){
+```12:            System.out.println(it3.next());
+```13:        }
+```14:    }
 
 For aliasing analysis we are interested in relating pairs of lines (Lines) and variables (Vars), creating two relations: a must-alias relation (must : (Line x Vars) <-> (Line x Vars)), and a may-alias relation (may : (Line x Vars) <-> (Line x Vars)). For example, it3 at line 4, and it1 at line 4 must-alias, since their values are always the same at that point (note the previous line). While it3 at line 11 may-alias with it1 at line 11, since at line 11 it1 is equal to it1 or it2, depending on the if-condition at line 3. Thus the must-alias relation relates variable-line pairs if the variables at those lines will necessarily point to the same memory location. Similarly, the may-alias relation relates variable-line pairs if there is a possible path, from the start of the program through those lines, such that the variables at those lines point to the same memory location.
 
