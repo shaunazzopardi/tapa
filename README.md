@@ -48,8 +48,8 @@ We can compute these relations by annotating source code by the effects statemen
 
 Note that here we are only giving an example of a local aliasing analysis (in contrast to a global one), which means that only the statements in a method are analysed, while we assume that the input parameters point to different memory locations. We can then compute whether a variable at a certain line aliases with a variable at another line by considering the memory locations they point to at that line:
 
-Definition. Variable x at line n must-alias with variable y at line m if memloc(n)(x) = memloc(m)(y).
+__Definition.__ _Variable x at line n must-alias with variable y at line m if memloc(n)(x) = memloc(m)(y)._
 
-Definition. Variable x at line n may-alias with variable y at line m if memloc(n)(x) ∩ memloc(m)(y) != {}.
+__Definition.__ _Variable x at line n may-alias with variable y at line m if memloc(n)(x) ∩ memloc(m)(y) != {}._
 
 Note that here, to compute enough information for aliasing we only needed to consider iterator pointers. Usually, however, we cannot only consider objects of one type, given that the objects of interest may be passed on to some other method, and to determine this method (assuming it is not static) we may need to determine the specific subtype of its target object, given that subclasses may override method definitions.
