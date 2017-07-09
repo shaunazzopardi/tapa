@@ -9,6 +9,7 @@ The main idea is to perform pointer aliasing analysis only for pointers of a cer
 Consider the following method:
 
  1:    public void method(Iterator<String> it1, Iterator<String> it2){
+ 
  2:        Iterator<String> it3;
  3:        if(!it1.hasNext()){
  4:            it3 = it1;
