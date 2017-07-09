@@ -23,6 +23,7 @@ Consider the following method:
 12:            System.out.println(it3.next());
 13:        }
 14:    }
+```
 
 For aliasing analysis we are interested in relating pairs of lines (Lines) and variables (Vars), creating two relations: a must-alias relation (must : (Line x Vars) <-> (Line x Vars)), and a may-alias relation (may : (Line x Vars) <-> (Line x Vars)). For example, it3 at line 4, and it1 at line 4 must-alias, since their values are always the same at that point (note the previous line). While it3 at line 11 may-alias with it1 at line 11, since at line 11 it1 is equal to it1 or it2, depending on the if-condition at line 3. Thus the must-alias relation relates variable-line pairs if the variables at those lines will necessarily point to the same memory location. Similarly, the may-alias relation relates variable-line pairs if there is a possible path, from the start of the program through those lines, such that the variables at those lines point to the same memory location.
 
@@ -43,7 +44,8 @@ We can compute these relations by annotating source code by the effects statemen
 12:            System.out.println(it3.next());//memloc(12) = {it1 -> {1}, it2 -> {2}, it3 -> {1,2}}
 13:        }//memloc(13) = {it1 -> {1}, it2 -> {2}, it3 -> {1,2}}
 14:    }//memloc(14) = {it1 -> {1}, it2 -> {2}, it3 -> {1,2} }
-'''
+```
+
 Note that here we are only giving an example of a local aliasing analysis (in contrast to a global one), which means that only the statements in a method are analysed, while we assume that the input parameters point to different memory locations. We can then compute whether a variable at a certain line aliases with a variable at another line by considering the memory locations they point to at that line:
 
 Definition. Variable x at line n must-alias with variable y at line m if memloc(n)(x) = memloc(m)(y).
