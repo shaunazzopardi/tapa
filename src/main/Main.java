@@ -10,6 +10,7 @@ import soot.SootClass;
 import soot.SootMethod;
 import soot.Transform;
 import soot.options.Options;
+import tapa.TapaTransformer;
 
 public class Main {
 
@@ -19,20 +20,12 @@ public class Main {
 
 	@SuppressWarnings("static-access")
 	private static void initializeSoot(String mainClass, String sootCp) {
+
+		//Setting several soot options
 		G.v().reset();
 		Options.v().set_whole_program(true);
 		Options.v().setPhaseOption("jb", "use-original-names:true");
 		
-		//we will try to use boomerang for pointer analysis
-//		Options.v().setPhaseOption("cg.spark", "on");
-		//Options.v().setPhaseOption("cg.spark", "simplify-offile:false");
-		//geom pts introduces context-sensitivity
-		//however we will attempt to deal with that ourselves
-//		Options.v().setPhaseOption("cg.spark", "geom-pta:true");
-//		Options.v().setPhaseOption("cg.spark", "geom-runs:2");
-
-		//    String userdir = System.getProperty("user.dir");
-		//    String sootCp = userdir + "/targets";
 		Options.v().set_soot_classpath(sootCp);
 
 		Options.v().set_prepend_classpath(true);
@@ -47,14 +40,23 @@ public class Main {
 		if (c != null) {
 			c.setApplicationClass();
 		}
+
+		//Set entry points to file
+		//TODO Get these from input args once functional
 		SootMethod methodByName = c.getMethodByName("main");
-		List<SootMethod> ePoints = new LinkedList<>();
-		ePoints.add(methodByName);
-		Scene.v().setEntryPoints(ePoints);
+		List<SootMethod> entryPoints = new LinkedList<>();
+		entryPoints.add(methodByName);
+		Scene.v().setEntryPoints(entryPoints);
+
 		// Add a transformer
+		// A transformer is a Soot concept that transforms or computes something about a Java program
 		PackManager.v().getPack("wjtp")
 		.add(new Transform("wjtp.TapaTransformer", new TapaTransformer()));
+
+		// Applies call graph phase, that computes the call graph of the program
 		PackManager.v().getPack("cg").apply();
+
+		// Applies wjtp (the whole-jimple transformation pack) phase, that computes our targeted pointer analysis
 		PackManager.v().getPack("wjtp").apply();
 
 	}
