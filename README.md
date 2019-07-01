@@ -4,7 +4,7 @@ Tapa is a work-in-progress pointer analysis (short for TArgeted Pointer Analysis
 
 Soot (https://sable.github.io/soot/) is used to analyse Java source code.
 
-The main idea is to perform pointer aliasing analysis only for pointers of a certain type, and those pointers required to perform the analysis for such pointer. A motivating analysis for this is static typestate analysis (or protocal analysis), that involves using static analysis to analyse a program with respect to some property (e.g. a finite-state machine) parametrized over some object (e.g. the property specifies that for each iterator object, the next method is never called before hasNext is called). In this case we only need to consider the aliasing relation between objects of this type.
+The main idea is to perform pointer aliasing analysis only for pointers of a certain type, and those pointers required to perform the analysis for such pointers. A motivating analysis for this is static typestate analysis (or protocol analysis), that involves using static analysis to analyse a program with respect to some property (e.g. a finite-state machine) parametrized over some object (e.g. the property specifies that for each iterator object, the next method is never called before hasNext is called). In this case we only need to consider the aliasing relation between objects of this type.
 
 Consider the following method:
 
@@ -53,3 +53,7 @@ __Definition.__ _Variable x at line n must-alias with variable y at line m if me
 __Definition.__ _Variable x at line n may-alias with variable y at line m if memloc(n)(x) ∩ memloc(m)(y) != {}._
 
 Note that here, to compute enough information for aliasing we only needed to consider iterator pointers. Usually, however, we cannot only consider objects of one type, given that the objects of interest may be passed on to some other method, and to determine this method (assuming it is not static) we may need to determine the specific subtype of its target object, given that subclasses may override method definitions.
+
+# Usage
+
+Construct a pointerAnalysis.TargetedPointerAnalysis object for an intraprocedural pointer analysis of a method given some set of locals. pointerAnalysis.TapaTransformer has some utility functions to identify a set of locals of a method of a given type.
